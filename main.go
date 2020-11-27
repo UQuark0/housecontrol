@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 )
@@ -73,13 +74,18 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	log.Println("Config read")
 	err = prepareLED()
 	if err != nil {
 		panic(err)
 	}
+	log.Println("LED TTY opened")
 
 	http.Handle("/", http.FileServer(http.Dir("./html")))
+	log.Println("File server initialized")
 	http.HandleFunc("/set_led_mode", setLEDMode)
+	log.Println("Led mode handler set")
 
+	log.Println("Listening")
 	http.ListenAndServe(":8080", nil)
 }
