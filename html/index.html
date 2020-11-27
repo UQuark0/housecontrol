@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <title>House Control</title>
+    </head>
+    <body>
+        <script>
+            function ledModeSelected() {
+                let modeSelect = document.getElementById("led_mode");
+                request = new XMLHttpRequest();
+                request.open("GET", "/set_led_mode?mode=" + modeSelect.value, true);
+                request.send(null);
+            }
+        </script>
+        <p>
+            LED strip mode:
+            <select value="" id="led_mode" onchange="ledModeSelected()">
+                <option></option>
+                <option>TURNOFF</option>
+                <option>RAINBOW</option>
+                <option>FLASHLIGHT</option>
+                <option>EPILEPTIC</option>
+                <option>WALKINGPIXEL</option>
+                <option>STARS</option>
+                <option>SORT</option>
+                <option>STACK</option>
+                <option>SMOOTHCHANGING</option>
+                <option>NIGHT</option>
+            </select>
+            The selected mode may not be applied immediately
+        </p>
+    </body>
+</html>

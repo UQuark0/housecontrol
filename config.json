@@ -1,0 +1,3 @@
+{
+    "led_tty": "/dev/ttyU0"
+}
