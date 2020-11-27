@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -29,7 +30,7 @@ var runtime struct {
 }
 
 func sendByteToLED(b byte) {
-
+	fmt.Fprintf(runtime.ledTTY, "%d", b)
 }
 
 func setLEDMode(responseWriter http.ResponseWriter, request *http.Request) {
