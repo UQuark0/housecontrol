@@ -1,3 +1,4 @@
 {
-    "led_tty": "/dev/ttyUSB0"
+    "led_tty": "/dev/null",
+    "http_address": ":8080"
 }

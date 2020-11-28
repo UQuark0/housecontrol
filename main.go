@@ -23,7 +23,8 @@ var modes = map[string]byte{
 }
 
 var config struct {
-	LEDTTY string `json:"led_tty"`
+	LEDTTY      string `json:"led_tty"`
+	HTTPAddress string `json:"http_address"`
 }
 
 var runtime struct {
@@ -118,5 +119,5 @@ func main() {
 	log.Println("Led mode handler set")
 
 	log.Println("Listening")
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(config.HTTPAddress, nil)
 }
