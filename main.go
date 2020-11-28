@@ -2,11 +2,11 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 )
 
 var modes = map[string]byte{
@@ -30,11 +30,21 @@ var runtime struct {
 	ledTTY *os.File
 }
 
-func sendByteToLED(b byte) {
-	fmt.Fprintf(runtime.ledTTY, "%d", b)
+func createCmd(request bool, key byte, value byte) []byte {
+	key &= 0b111
+	var requestByte byte
+	if request {
+		requestByte = 1 << 3
+	} else {
+		requestByte = 0
+	}
+	part1 := requestByte | key
+	part2 := value
+	return []byte{part1, part2}
 }
 
 func setLEDMode(responseWriter http.ResponseWriter, request *http.Request) {
+	const keyMode byte = 4
 	mode := request.URL.Query().Get("mode")
 	if mode == "" {
 		http.Error(responseWriter, "No mode specified", http.StatusBadRequest)
@@ -43,7 +53,27 @@ func setLEDMode(responseWriter http.ResponseWriter, request *http.Request) {
 	if !ok {
 		http.Error(responseWriter, "Invalid mode", http.StatusBadRequest)
 	}
-	sendByteToLED(modeByte)
+	runtime.ledTTY.Write(createCmd(false, keyMode, modeByte))
+}
+
+func setLEDBrightness(responseWriter http.ResponseWriter, request *http.Request) {
+	const keyBrightness byte = 3
+	brightness := request.URL.Query().Get("brightness")
+	if brightness == "" {
+		http.Error(responseWriter, "No brightness specified", http.StatusBadRequest)
+	}
+	brightnessInt, err := strconv.Atoi(brightness)
+	if err != nil {
+		http.Error(responseWriter, "Invalid brightness", http.StatusBadRequest)
+	}
+	if brightnessInt > 255 {
+		brightnessInt = 255
+	}
+	if brightnessInt < 0 {
+		brightnessInt = 0
+	}
+	brightnessByte := byte(brightnessInt)
+	runtime.ledTTY.Write(createCmd(false, keyBrightness, brightnessByte))
 }
 
 func readConfig() error {
@@ -84,6 +114,7 @@ func main() {
 	http.Handle("/", http.FileServer(http.Dir("./html")))
 	log.Println("File server initialized")
 	http.HandleFunc("/set_led_mode", setLEDMode)
+	http.HandleFunc("/set_led_brightness", setLEDBrightness)
 	log.Println("Led mode handler set")
 
 	log.Println("Listening")

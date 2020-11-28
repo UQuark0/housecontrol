@@ -10,6 +10,12 @@
                 request.open("GET", "/set_led_mode?mode=" + modeSelect.value, true);
                 request.send(null);
             }
+            function ledBrightnessChanged() {
+                let brightnessSlider = document.getElementById("led_brightness");
+                request = new XMLHttpRequest();
+                request.open("GET", "/set_led_brightness?brightness=" + brightnessSlider.value, true);
+                request.send(null);
+            }
         </script>
         <p>
             LED strip mode:
@@ -26,7 +32,10 @@
                 <option>SMOOTHCHANGING</option>
                 <option>NIGHT</option>
             </select>
-            The selected mode may not be applied immediately
+            (the selected mode may not be applied immediately)
+            <br>
+            LED strip brightness
+            <input type="range" min="0" max="280" value="255" class="slider" id="led_brightness" oninput="ledBrightnessChanged()">
         </p>
     </body>
 </html>
