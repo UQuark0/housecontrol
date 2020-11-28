@@ -110,6 +110,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	defer runtime.ledTTY.Close()
 	log.Println("LED TTY opened")
 
 	http.Handle("/", http.FileServer(http.Dir("./html")))
