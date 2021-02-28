@@ -66,7 +66,23 @@ func (s *Strip) getResponseChan() chan *stripResponse {
 	return responseChan
 }
 
-func (s *Strip) Execute(command []byte) ([]byte, error) {
+func (s *Strip) Execute(command []byte) error {
+	s.portMutex.Lock()
+	defer s.portMutex.Unlock()
+
+	written, err := s.port.Write(command)
+	if err != nil {
+		return err
+	}
+
+	if written != len(command) {
+		return ErrWrite
+	}
+
+	return nil
+}
+
+func (s *Strip) Request(command []byte) ([]byte, error) {
 	s.portMutex.Lock()
 	defer s.portMutex.Unlock()
 

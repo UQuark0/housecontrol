@@ -46,7 +46,7 @@ func (w *Web) HandleStripDashboard(ctx *gin.Context) {
 		Mode().
 		Build()
 
-	stripConfig, err := w.Strip.Execute(cmd)
+	stripConfig, err := w.Strip.Request(cmd)
 	if err != nil {
 		ctx.Data(http.StatusInternalServerError, "text/plaintext", []byte(err.Error()))
 		return
@@ -65,6 +65,15 @@ func (w *Web) HandleStripDashboard(ctx *gin.Context) {
 	}
 
 	err = stripDashboardTemplate.Execute(ctx.Writer, data)
+	if err != nil {
+		ctx.Data(http.StatusInternalServerError, "text/plaintext", []byte(err.Error()))
+		return
+	}
+	ctx.Status(http.StatusOK)
+}
+
+func (w *Web) HandleStripReset(ctx *gin.Context) {
+	err := w.Strip.Execute(strip.NewCommandBuilder().Reset().Build())
 	if err != nil {
 		ctx.Data(http.StatusInternalServerError, "text/plaintext", []byte(err.Error()))
 		return
@@ -92,7 +101,7 @@ func (w *Web) HandleStripUpdate(ctx *gin.Context) {
 			cmd.Mode(strip.Mode(v))
 		}
 	}
-	buffer, err := w.Strip.Execute(cmd.Build())
+	buffer, err := w.Strip.Request(cmd.Build())
 	if err != nil {
 		ctx.Data(http.StatusBadRequest, "text/plaintext", []byte(err.Error()))
 		return
