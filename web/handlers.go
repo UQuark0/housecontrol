@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"html/template"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 )
@@ -50,6 +51,7 @@ func (w *Web) HandleStripDashboard(ctx *gin.Context) {
 		ctx.Data(http.StatusInternalServerError, "text/plaintext", []byte(err.Error()))
 		return
 	}
+	log.Println(stripConfig)
 
 	data := map[string]interface{}{
 		"width": stripConfig[1],
@@ -90,9 +92,10 @@ func (w *Web) HandleStripUpdate(ctx *gin.Context) {
 			cmd.Mode(strip.Mode(v))
 		}
 	}
-	_, err = w.Strip.Execute(cmd.Build())
+	buffer, err := w.Strip.Execute(cmd.Build())
 	if err != nil {
 		ctx.Data(http.StatusBadRequest, "text/plaintext", []byte(err.Error()))
 		return
 	}
+	log.Println(buffer)
 }
