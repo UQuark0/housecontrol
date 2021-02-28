@@ -49,13 +49,6 @@
             request.open("PUT", "/strip/update");
             request.send(JSON.stringify(map));
         }
-
-        function resetClick() {
-            let request = new XMLHttpRequest();
-            request.open("GET", "/strip/reset");
-            request.send();
-            window.location.reload();
-        }
     </script>
 </head>
 <body>
@@ -84,8 +77,6 @@
                 <label for="brightness">Brightness</label>
                 <br>
                 <input type="range" id="brightness" min="-10" max="265" value="{{.brightness}}" oninput="onInput('brightness')">
-                <br>
-                <button id="reset" onclick="resetClick()">RESET</button>
             </div>
         </div>
     </div>

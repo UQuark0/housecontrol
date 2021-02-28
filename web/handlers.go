@@ -72,15 +72,6 @@ func (w *Web) HandleStripDashboard(ctx *gin.Context) {
 	ctx.Status(http.StatusOK)
 }
 
-func (w *Web) HandleStripReset(ctx *gin.Context) {
-	err := w.Strip.Execute(strip.NewCommandBuilder().Reset().Build())
-	if err != nil {
-		ctx.Data(http.StatusInternalServerError, "text/plaintext", []byte(err.Error()))
-		return
-	}
-	ctx.Status(http.StatusOK)
-}
-
 func (w *Web) HandleStripUpdate(ctx *gin.Context) {
 	data := make(map[string]byte)
 	err := ctx.ShouldBindJSON(&data)
