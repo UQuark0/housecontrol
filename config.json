@@ -1,4 +1,15 @@
 {
-    "led_tty": "/dev/ttyUSB0",
-    "http_address": ":8080"
+    "Strip": {
+        "Options": {
+            "PortName": "/dev/ttyUSB0",
+            "BaudRate": 4800,
+            "DataBits": 8,
+            "StopBits": 1,
+            "InterCharacterTimeout": 5000,
+            "MinimumReadSize": 5
+        }
+    },
+    "Web": {
+        "Bind": ":8080"
+    }
 }

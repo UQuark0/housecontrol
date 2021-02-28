@@ -1,0 +1,86 @@
+<html>
+<head>
+    <title>Strip Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: sans,serif;
+        }
+
+        .background {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: white;
+        }
+
+        .dash {
+            width: 60%;
+            height: 100%;
+            background-color: white;
+
+            position:absolute;
+            left:50%;
+            margin-left:-30%;
+        }
+
+        input {
+            width: 40%;
+        }
+
+        select {
+            width: 40%;
+        }
+    </style>
+
+    <script>
+        function onInput(id) {
+            let element = document.getElementById(id);
+            let value = element.value
+            if (value < 0)
+                value = 0;
+            if (value > 255)
+                value = 255;
+
+            let request = new XMLHttpRequest();
+            let map = {};
+            map[id] = parseInt(value);
+            request.open("PUT", "/strip/update");
+            request.send(JSON.stringify(map));
+        }
+    </script>
+</head>
+<body>
+    <div class="background">
+        <div class="dash">
+            <div style="text-align: center;">
+                <h1>STRIP DASHBOARD</h1>
+                <label for="mode">Mode</label>
+                <br>
+                <select id="mode" onchange="onInput('mode')">
+                    <option value="0" {{.noiseSelected}}>Noise</option>
+                    <option value="1" {{.rainbowSelected}}>Rainbow</option>
+                    <option value="2" {{.epilepticSelected}}>Epileptic</option>
+                    <option value="3" {{.turnoffSelected}}>Turnoff</option>
+                    <option value="4" {{.nightSelected}}>Night</option>
+                </select>
+                <br>
+                <label for="width">Width</label>
+                <br>
+                <input type="range" id="width" min="-10" max="265" value="{{.width}}" oninput="onInput('width')">
+                <br>
+                <label for="speed">Speed</label>
+                <br>
+                <input type="range" id="speed" min="-10" max="265" value="{{.speed}}" oninput="onInput('speed')">
+                <br>
+                <label for="brightness">Brightness</label>
+                <br>
+                <input type="range" id="brightness" min="-10" max="265" value="{{.brightness}}" oninput="onInput('brightness')">
+                <br>
+                <button id="reset" onclick="onInput('reset')">RESET</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
