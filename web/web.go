@@ -18,7 +18,7 @@ func (w *Web) Initialize() {
 	strip := w.router.Group("/strip")
 	strip.GET("/dashboard", w.HandleStripDashboard)
 	strip.PUT("/update", w.HandleStripUpdate)
-	strip.PUT("/reset", w.HandleStripReset)
+	strip.GET("/reset", w.HandleStripReset)
 }
 
 func (w *Web) Run() error {
